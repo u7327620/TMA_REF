@@ -1,13 +1,12 @@
 {
-  "name": "hortrox",
-  "version": "2.0.0",
+  "name": "TMA-REF",
+  "version": "0.1",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "deploy-commands": "node deploy-commands.js"
   },
-  "keywords": [],
-  "author": "xMajedz",
+  "author": "xMajedz, Lostmail",
   "license": "MIT",
   "description": "",
   "dependencies": {
