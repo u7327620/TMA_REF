@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('list-reactions')
-		.setDescription('Lists users recating to a message'),
+		.setDescription('Lists users reacting to a message'),
 		//.addChannelOption(),
 		//.addMessageOption(),
 	async execute(client, interaction) {
