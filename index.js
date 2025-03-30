@@ -9,29 +9,9 @@ const config = require('./config.json');
 client.config = config;
 client.clips = new Collection();
 client.mod_message = new Collection();
-client.cross_roles = new Collection();
 client.commands = new Collection();
 client.clips_setup = new Collection();
 
-// asked majed what cross-roles is ...
-fs.readFile('./cross-roles.json', 'utf8', (e, data) => {
-  if (e) {
-    console.error(e);
-    return;
-  }
-
-  const guilds = JSON.parse(data);
-
-  for (const { guild_id, cross_channel_id, cross_roles } of guilds) {
-    const roles = new Collection();
-    for (const { id, name } of cross_roles) {
-      roles.set(name, id);
-    }
-    client.cross_roles.set(guild_id, { cross_channel_id: cross_channel_id, cross_roles: roles });
-  }
-});
-
-// also going to need to know what's in this file ...
 fs.readFile('./clips-setup.json', 'utf8', (e, data) => {
   if (e) {
     console.error(e);

@@ -6,25 +6,7 @@ module.exports = {
   execute(client, message) {
     if (message.author.bot) return;
 
-    for (const [role_id, role] of message.mentions.roles) {
-      //TODO: Rework thid mess
-      const roles = client.cross_roles.get(message.guildId);
-      if (!roles) break;
-
-      for (const [guild_id, cross_roles] of client.cross_roles) {
-        // Don't cross mention if current server doesn't have the mentioned cross role
-        if (!client.cross_roles.get(message.guildId).cross_roles.has(role.name)) break;
-
-        const role_id = cross_roles.cross_roles.get(role.name);
-        const cross_channel_id = cross_roles.cross_channel_id;
-
-        if (role_id && !(cross_channel_id === message.channelId))
-          client.channels.cache.get(cross_channel_id).send(`<@&${role_id}>`);
-      }
-    }
-
     const clips_setup = client.clips_setup.get(message.guildId);
-
     if (!clips_setup) return;
 
     const { share_channel_id, clips_channel_id, mod_channel_id } = clips_setup;
