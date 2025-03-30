@@ -7,23 +7,7 @@ const client = new Client({
 
 const config = require('./config.json');
 client.config = config;
-client.clips = new Collection();
-client.mod_message = new Collection();
 client.commands = new Collection();
-client.clips_setup = new Collection();
-
-fs.readFile('./clips-setup.json', 'utf8', (e, data) => {
-  if (e) {
-    console.error(e);
-    return;
-  }
-
-  const guilds = JSON.parse(data);
-
-  for (const { guild_id, setup } of guilds)
-    client.clips_setup.set(guild_id, setup);
-});
-
 
 // binds events from filename
 const events = fs.readdirSync("./events").filter(file => file.endsWith(".js"));
@@ -36,13 +20,21 @@ for (const file of events) {
   }
 }
 
-// adds commands to a list from filename
-const commands = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
-for (const file of commands) {
-  const command = require(`./commands/${file}`);
+// adds commands to a collection from filename
+fs.promises.readdir("./commands", { recursive: true })
 
-  console.log(`Attempting to load command ${command.data.name}`);
-  client.commands.set(command.data.name, command);
-}
+  .then(files => {
+    files = files.filter(file => file.endsWith(".js"));
+    for (const file of files) {
+      const command = require(`./commands/${file}`);
+      console.log(`Loading command: ${command.data.name}`);
+      client.commands.set(command.data.name, command);
+    }
+  })
+
+  .catch(err => {
+    console.log(err);
+  })
+
 
 client.login(config.token);

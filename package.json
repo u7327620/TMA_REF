@@ -1,7 +1,8 @@
 {
-  "name": "TMA-REF",
+  "name": "tma-ref",
   "version": "0.1",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node index.js",
     "deploy-commands": "node deploy-commands.js"
