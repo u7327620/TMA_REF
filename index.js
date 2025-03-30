@@ -1,8 +1,8 @@
+const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const fs = require('fs');
-const { Client, Intents, Collection } = require('discord.js');
 
 const client = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.MESSAGE_CONTENT]
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent]
 });
 
 const config = require('./config.json');
@@ -48,19 +48,21 @@ fs.readFile('./clips-setup.json', 'utf8', (e, data) => {
 // binds events from filename
 const events = fs.readdirSync("./events").filter(file => file.endsWith(".js"));
 for (const file of events) {
-  const eventName = file.split(".")[0];
   const event = require(`./events/${file}`);
-  client.on(eventName, event.bind(null, client));
+  if (event.once) {
+    client.once(event.name, (...args) => event.execute(...args));
+  } else {
+    client.on(event.name, (...args) => event.execute(...args));
+  }
 }
 
 // adds commands to a list from filename
 const commands = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 for (const file of commands) {
-  const commandName = file.split(".")[0];
   const command = require(`./commands/${file}`);
 
-  console.log(`Attempting to load command ${commandName}`);
-  client.commands.set(commandName, command);
+  console.log(`Attempting to load command ${command.data.name}`);
+  client.commands.set(command.data.name, command);
 }
 
-client.login(token);
+client.login(config.token);
