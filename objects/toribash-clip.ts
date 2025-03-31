@@ -3,6 +3,7 @@ import { Message, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client, TextChan
 export function clipsApproval(client: Client, clipToApprove: ToribashClip): void {
   const approve = new ButtonBuilder()
     .setCustomId("approve")
+    .setLabel("Approve")
     .setStyle(ButtonStyle.Success);
 
   const disapprove = new ButtonBuilder()
@@ -19,7 +20,7 @@ export function clipsApproval(client: Client, clipToApprove: ToribashClip): void
       return;
     }
     (channel as TextChannel).send({
-      content: `${clipToApprove.message_url} Sent By: ${clipToApprove.originator}\n`, components: [row]
+      content: `${clipToApprove.message_url}\nSent By: ${clipToApprove.originator}\n${clipToApprove.clip_url}`, components: [row]
     });
   })
 }
@@ -51,7 +52,7 @@ export function clipsFromMessage(message: Message): ToribashClip[] {
   return clips;
 }
 
-class ToribashClip {
+export class ToribashClip {
   clip_url: String;
   message_url: String;
   originator: String;
