@@ -22,7 +22,6 @@ for (const file of events) {
 
 // adds commands to a collection from filename
 fs.promises.readdir("./commands", { recursive: true })
-
   .then(files => {
     files = files.filter(file => file.endsWith(".js"));
     for (const file of files) {
@@ -31,10 +30,8 @@ fs.promises.readdir("./commands", { recursive: true })
       client.commands.set(command.data.name, command);
     }
   })
-
   .catch(err => {
     console.log(err);
   })
-
 
 client.login(config.token);
