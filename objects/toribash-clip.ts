@@ -2,26 +2,24 @@ import { Message, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client, TextChan
 
 export function clipsApproval(client: Client, clipToApprove: ToribashClip): void {
   const approve = new ButtonBuilder()
-    .setCustomId("approve " + clipToApprove.clip_url)
-    .setLabel("Approve")
+    .setCustomId("approve")
     .setStyle(ButtonStyle.Success);
 
   const disapprove = new ButtonBuilder()
-    .setCustomId("disapprove " + clipToApprove.clip_url)
+    .setCustomId("disapprove")
     .setLabel("Disapprove")
     .setStyle(ButtonStyle.Danger);
 
   const row = new ActionRowBuilder<ButtonBuilder>()
     .addComponents(approve, disapprove);
 
-  client.channels.fetch("1179577744506503208").then(channel => {
+  client.channels.fetch("762095632529227786").then(channel => {
     if (!channel || !channel.isTextBased()) {
       console.error("Channel not found or not a text channel");
       return;
     }
     (channel as TextChannel).send({
-      content: `${clipToApprove.message_url} Sent By: ${clipToApprove.originator}\n
-      ${clipToApprove.clip_url}`, components: [row]
+      content: `${clipToApprove.message_url} Sent By: ${clipToApprove.originator}\n`, components: [row]
     });
   })
 }

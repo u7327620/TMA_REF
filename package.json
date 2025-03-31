@@ -1,10 +1,9 @@
 {
   "name": "tma-ref",
   "version": "0.1",
-  "main": "index.js",
-  "type": "commonjs",
+  "main": "index.cjs",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.cjs",
     "deploy-commands": "node deploy-commands.js"
   },
   "author": "xMajedz, Lostmail",
