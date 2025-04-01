@@ -17,9 +17,13 @@ export function execute(message: Message<boolean>) {
     /gyazo.com/);
 
   if (message.attachments.size > 0 || message.embeds.length > 0 || links.length > 0) {
-    const clips = clipsFromMessage(message);
-    if (clips.length != 0) {
-      clips.forEach((clip) => { clipsApproval(client, clip) });
+    try {
+      const clips = clipsFromMessage(message);
+      if (clips.length != 0) {
+        clips.forEach((clip) => { clipsApproval(client, clip) });
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 }
