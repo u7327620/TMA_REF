@@ -1,11 +1,11 @@
-import {Client, ClientOptions, Collection, Interaction, Message} from "discord.js"
+import {Client, ClientOptions, Collection, Interaction } from "discord.js"
 import path from "node:path";
 import fs from "node:fs";
 
 export interface Command {
   name: String,
   description: String,
-  execute: (input: Message|Interaction, ...args: string[]) => Promise<any>
+  execute: (input: Interaction, ...args: string[]) => Promise<any>
 }
 
 export default class CommandClient extends Client {
