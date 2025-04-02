@@ -1,6 +1,6 @@
 import { Message, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client, TextChannel } from "discord.js";
 
-const clipChannel:string = "1179577744506503208"
+const clipChannel:string = "762095632529227786"
 
 export function clipsApproval(client: Client, clipToApprove: ToribashClip): void {
   const approve = new ButtonBuilder()

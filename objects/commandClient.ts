@@ -17,10 +17,10 @@ export default class CommandClient extends Client {
     this.loadCommands()
   }
 
-  private async loadCommands():Promise<String[]> {
+  private loadCommands():String[] {
     const loaded:String[] = [];
     const commandsPath = path.join(process.cwd(), "commands");
-    await fs.promises.readdir(commandsPath, { recursive: true })
+    fs.promises.readdir(commandsPath, { recursive: true })
       .then((files: any[]) => {
         files = files.filter(file => file.endsWith(".js"));
         for (const file of files) {
