@@ -1,6 +1,13 @@
-import {Client, ClientOptions, Collection, Interaction } from "discord.js"
+import {Client, ClientOptions, Collection, Interaction} from "discord.js"
 import path from "node:path";
 import fs from "node:fs";
+import {authenticate} from "@google-cloud/local-auth";
+import {google} from "googleapis";
+import { OAuth2Client } from 'google-auth-library'
+
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+const TOKEN_PATH = path.join(process.cwd(), "token.json");
+const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
 
 export interface Command {
   name: String,
@@ -14,7 +21,49 @@ export default class CommandClient extends Client {
   constructor(options: ClientOptions) {
     super(options);
     this.commands = new Collection();
-    this.loadCommands()
+    this.googleAuth().then(this.loadCommands);
+  }
+
+  private async googleAuth():Promise<OAuth2Client> {
+    async function saveCredentials(client: OAuth2Client):Promise<void> {
+      const content:string = fs.readFileSync(CREDENTIALS_PATH).toString();
+      const keys = JSON.parse(content);
+      const key = keys.installed || keys.web;
+      const payload = JSON.stringify({
+        type: 'authorized_user',
+        client_id: key.client_id,
+        client_secret: key.client_secret,
+        refresh_token: client.credentials.refresh_token,
+      });
+      fs.writeFileSync(TOKEN_PATH, payload);
+    }
+    async function loadSavedCredentialsIfExist():Promise<OAuth2Client | null> {
+      try {
+        const content = fs.readFileSync(TOKEN_PATH).toString();
+        const credentials = JSON.parse(content);
+        return (google.auth.fromJSON(credentials) as OAuth2Client);
+      } catch (err) {
+        console.log("Can't log from credentials");
+        return null;
+      }
+    }
+
+    console.log("Authing Google");
+    let client:OAuth2Client | null = await loadSavedCredentialsIfExist();
+    if(client) return client;
+
+    client = await authenticate({
+      scopes: SCOPES,
+      keyfilePath: CREDENTIALS_PATH,
+    })
+
+    console.log("Finished auth");
+    if (client.credentials){
+      console.log("Saving authed credentials")
+      await saveCredentials(client);
+    }
+    console.log("Returning form auth");
+    return client;
   }
 
   private loadCommands():String[] {
