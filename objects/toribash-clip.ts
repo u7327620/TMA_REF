@@ -1,5 +1,7 @@
 import { Message, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client, TextChannel } from "discord.js";
 
+const clipChannel:string = "1179577744506503208"
+
 export function clipsApproval(client: Client, clipToApprove: ToribashClip): void {
   const approve = new ButtonBuilder()
     .setCustomId("approve")
@@ -14,7 +16,7 @@ export function clipsApproval(client: Client, clipToApprove: ToribashClip): void
   const row = new ActionRowBuilder<ButtonBuilder>()
     .addComponents(approve, disapprove);
 
-  client.channels.fetch("762095632529227786").then(channel => {
+  client.channels.fetch(clipChannel).then(channel => {
     if (!channel || !channel.isTextBased()) {
       console.error("Channel not found or not a text channel");
       return;

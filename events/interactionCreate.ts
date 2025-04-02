@@ -4,8 +4,8 @@ import CommandClient, {Command} from "../objects/commandClient.js";
 export const name:Events.InteractionCreate = Events.InteractionCreate;
 export const once: Boolean = false;
 export async function execute(interaction:Interaction) {
-  if (!interaction.isChatInputCommand()) return;
   console.log(interaction);
+  if (!interaction.isChatInputCommand()) return;
 
   const myClient:CommandClient = interaction.client as CommandClient;
   if(typeof myClient.commands == 'undefined') return;

@@ -29,7 +29,4 @@ for (const file of events) {
   })
 }
 
-// adds commands to a collection from filename
-/**/
-
 client.login(config.token);
