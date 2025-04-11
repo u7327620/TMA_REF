@@ -1,9 +1,8 @@
 import { GatewayIntentBits } from "discord.js";
-import CommandClient from "./objects/commandClient.js"
+import CommandClient from "./objects/commandClient.js";
 import path from "node:path";
 import fs from 'node:fs';
-// @ts-ignore
-import config from './config.json' with { type: "json"};
+import config from './config.json' with { type: "json" };
 
 export const client = new CommandClient({
   intents: [
