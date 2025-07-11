@@ -1,6 +1,5 @@
 import { Message, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client, TextChannel } from "discord.js";
-
-const clipChannel:string = "762095632529227786"
+import config from '../config.json' with { type: "json" };
 
 export function clipsApproval(client: Client, clipToApprove: ToribashClip): void {
   const approve = new ButtonBuilder()
@@ -16,7 +15,7 @@ export function clipsApproval(client: Client, clipToApprove: ToribashClip): void
   const row = new ActionRowBuilder<ButtonBuilder>()
     .addComponents(approve, disapprove);
 
-  client.channels.fetch(clipChannel).then(channel => {
+  client.channels.fetch(config.approveClipChannel).then(channel => {
     if (!channel || !channel.isTextBased()) {
       console.error("Channel not found or not a text channel");
       return;
@@ -30,27 +29,32 @@ export function clipsApproval(client: Client, clipToApprove: ToribashClip): void
 export function clipsFromMessage(message: Message): ToribashClip[] {
   const clips: ToribashClip[] = [];
 
-  const videos = message.attachments.filter(attachment =>
+  const videoAttachments = message.attachments.filter(attachment =>
     attachment.contentType == "video/mp4" ||
     attachment.contentType == "video/mov" ||
-    attachment.contentType == "video/quicktime");
-  videos.forEach(attachment => {
+    attachment.contentType == "video/quicktime"||
+    attachment.contentType == "image/gif")
+  videoAttachments.forEach(attachment => {
     const toribashClip = new ToribashClip(message.url, message.author.username, attachment.url);
+    console.log(toribashClip);
     clips.push(toribashClip);
   });
 
-  let gifs = message.content.split(" ").filter(word => /https?:\/\//.test(word));
-  gifs = gifs.filter(link =>
-    /discordapp.net/.test(link) ||
-    /discordapp.com/.test(link) ||
-    /discord.net/.test(link) ||
-    /discord.com/.test(link) ||
-    /imgur.com/ ||
-    /gyazo.com/);
-  gifs.forEach(link => {
-    const toribashClip = new ToribashClip(message.url, message.author.username, link);
-    clips.push(toribashClip);
-  })
+  const imgurGifRegex = /(?:https?:\/\/)?(?:i\.)?imgur\.com\/(?:gallery\/)?([a-zA-Z0-9]{5,})(?:\.gif|\.gifv)?/i;
+  const gyazoGifRegex = /(?:https?:\/\/)?(?:i\.)?gyazo\.com\/([a-zA-Z0-9]{32})(?:\.gif)?/i;
+  const discordCdnGifRegex = /https?:\/\/(?:cdn\.)?discordapp\.com\/attachments\/\d+\/\d+\/[^\s\/]+/i;
+
+  for (const embed of message.embeds) {
+    if (!embed.video && !embed.url){
+      break
+    }
+    // @ts-ignore
+    if (imgurGifRegex.test(embed.url) || gyazoGifRegex.test(embed.url) || discordCdnGifRegex.test(embed.url)){
+      const toribashClip = new ToribashClip(message.url, message.author.username, <String>embed.url);
+      console.log(toribashClip);
+      clips.push(toribashClip);
+    }
+  }
   return clips;
 }
 

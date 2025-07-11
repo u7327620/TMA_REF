@@ -1,6 +1,5 @@
 import {Interaction, SlashCommandBuilder, TextChannel} from "discord.js"
-
-const sendClipChannel:string = "762095632529227786"
+import config from '../config.json' with { type: "json" };
 
 export const name = "approve";
 
@@ -22,15 +21,13 @@ export async function execute(interaction:Interaction) {
       return
     }
 
-    if(link.startsWith("http")) {
-      interaction.client.channels.fetch(sendClipChannel).then(channel => {
-        if (!channel || !channel.isTextBased()) {
-          console.error("Channel not found or not a text channel");
-          return;
-        }
-        (channel as TextChannel).send({content: `${link}`});
-        interaction.message.delete();
-      });
-    }
+    interaction.client.channels.fetch(config.clipsOnlyChannel).then(channel => {
+      if (!channel || !channel.isTextBased()) {
+        console.error("Channel not found or not a text channel");
+        return;
+      }
+      (channel as TextChannel).send({content: interaction.message.content});
+      interaction.message.delete();
+    });
   }
 }
