@@ -45,6 +45,7 @@ export function clipsFromMessage(message: Message): ToribashClip[] {
   const discordCdnGifRegex = /https?:\/\/(?:cdn\.)?discordapp\.com\/attachments\/\d+\/\d+\/[^\s\/]+/i;
 
   for (const embed of message.embeds) {
+    console.log(embed)
     if (!embed.video && !embed.url){
       break
     }
