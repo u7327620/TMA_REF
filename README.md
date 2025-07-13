@@ -1,2 +1,1 @@
-# TMA_REF
-TMA discord bot
+Archived TMA bot
