@@ -5,6 +5,8 @@ import { client } from "../index.js";
 export const name:Events.MessageCreate = Events.MessageCreate;
 export const once: Boolean = false;
 export function execute(message: Message<boolean>) {
+
+  if (message.channelId != "550755313507237893") return;
   if (message.author.bot) return;
 
   const content = message.content.split(" ").filter((word) => word.startsWith("https://") || word.startsWith("http://"));
